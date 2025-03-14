@@ -10,6 +10,8 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@headlessui/vue": "^1.7.23",
+    "@heroicons/vue": "^2.1.5",
     "@tabler/core": "^1.0.0-beta21",
     "nuxt": "^3.13.0",
     "vue": "latest",
