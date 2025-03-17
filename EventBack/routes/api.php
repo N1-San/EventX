@@ -14,7 +14,14 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::apiResource('events', EventController::class);
+   
     Route::apiResource('tasks', TaskController::class);
+    Route::get('events/{event_id}/tasks', [TaskController::class, 'getTasksByEvent']);
+
     Route::apiResource('guests', GuestController::class);
+    Route::get('events/{event_id}/guests', [GuestController::class, 'getGuestsByEvent']);
+
+
     Route::apiResource('vendors', VendorController::class);
+    Route::get('events/{event_id}/vendors', [VendorController::class, 'getVendorsByEvent']);
 });
