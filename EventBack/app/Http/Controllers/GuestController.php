@@ -7,59 +7,42 @@ use Illuminate\Http\Request;
 
 class GuestController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        return Guest::with('event')->get();
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'event_id' => 'required|exists:events,id',
+            'name' => 'required|string',
+            'email' => 'nullable|email',
+            'tag' => 'required|in:family,friend,colleague',
+        ]);
+
+        return Guest::create($validated);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Guest $guest)
     {
-        //
+        return $guest->load('event');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Guest $guest)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Guest $guest)
     {
-        //
+        $guest->update($request->all());
+        return response()->json(['message' => 'Guest updated successfully', 'guest' => $guest]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Guest $guest)
     {
-        //
+        $guest->delete();
+        return response()->json(['message' => 'Guest deleted successfully']);
+    }
+
+    public function getGuestsByEvent($event_id)
+    {
+        return Guest::where('event_id', $event_id)->get();
     }
 }
