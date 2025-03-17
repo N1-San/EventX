@@ -7,59 +7,43 @@ use Illuminate\Http\Request;
 
 class VendorController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        return Vendor::with('event')->get();
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'event_id' => 'required|exists:events,id',
+            'name' => 'required|string',
+            'category' => 'required|string',
+            'contact' => 'nullable|string',
+        ]);
+
+        return Vendor::create($validated);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Vendor $vendor)
     {
-        //
+        return $vendor->load('event');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Vendor $vendor)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Vendor $vendor)
     {
-        //
+        $vendor->update($request->all());
+        return response()->json(['message' => 'Vendor updated successfully', 'vendor' => $vendor]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Vendor $vendor)
     {
-        //
+        $vendor->delete();
+        return response()->json(['message' => 'Vendor deleted successfully']);
+    }
+
+    public function getVendorsByEvent($event_id)
+    {
+        return Vendor::where('event_id', $event_id)->get();
     }
 }
+
